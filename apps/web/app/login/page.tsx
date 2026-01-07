@@ -28,13 +28,23 @@ export default function LoginPage() {
           ? 'http://localhost:8000' 
           : `http://${window.location.hostname}:8000`)
       
+      console.log('API URL:', API_URL)
+      console.log('Testing API key...')
+      
       const response = await fetch(`${API_URL}/health`, {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
         },
       })
 
+      console.log('Response status:', response.status)
+      console.log('Response ok:', response.ok)
+      
+      const data = await response.json()
+      console.log('Response data:', data)
+
       if (response.ok) {
+        console.log('Login successful, storing API key and redirecting...')
         // Store in localStorage
         localStorage.setItem('apiKey', apiKey)
         router.push('/leads')
@@ -42,7 +52,8 @@ export default function LoginPage() {
         setError('Invalid API key')
       }
     } catch (err) {
-      setError('Failed to connect to API')
+      console.error('Login error:', err)
+      setError('Failed to connect to API: ' + (err as Error).message)
     }
   }
 
