@@ -178,7 +178,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
             </CardContent>
           </Card>
 
-          {job?.status === 'ready' && (
+          {(job?.status === 'ready' || job?.status === 'pushed') && (
             <Card>
               <CardHeader>
                 <CardTitle>Actions</CardTitle>
@@ -195,7 +195,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
             </Card>
           )}
 
-          {job?.status === 'ready' && (
+          {(job?.status === 'ready' || job?.status === 'pushed') && (
             <Card>
               <CardHeader>
                 <CardTitle>Results</CardTitle>
