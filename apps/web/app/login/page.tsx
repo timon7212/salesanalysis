@@ -23,11 +23,14 @@ export default function LoginPage() {
 
     // Test the API key
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 
-        (typeof window !== 'undefined' && window.location.origin.includes('localhost') 
-          ? 'http://localhost:8000' 
-          : `http://${window.location.hostname}:8000`)
+      // Определяем API URL динамически на основе текущего hostname
+      const isLocal = window.location.hostname === 'localhost' || 
+                     window.location.hostname === '127.0.0.1'
+      const API_URL = isLocal 
+        ? 'http://localhost:8000' 
+        : `http://${window.location.hostname}:8000`
       
+      console.log('Hostname:', window.location.hostname)
       console.log('API URL:', API_URL)
       console.log('Testing API key...')
       
