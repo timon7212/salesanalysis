@@ -25,12 +25,28 @@ export default function LoginPage() {
     try {
       // Определяем API URL динамически на основе текущего hostname
       const isLocal = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1'
-      const API_URL = isLocal 
-        ? 'http://localhost:8000' 
-        : `http://${window.location.hostname}:8000`
+                     window.location.hostname === '127.0.0.1' ||
+                     window.location.hostname.match(/^\d+\.\d+\.\d+\.\d+$/) // IP address
+      
+      let API_URL
+      if (isLocal) {
+        API_URL = 'http://localhost:8000'
+      } else {
+        // Production: используем api поддомен и тот же протокол что и страница
+        const protocol = window.location.protocol // https: или http:
+        const parts = window.location.hostname.split('.')
+        
+        // Если уже есть поддомен (например analysis.manyboost.io)
+        // делаем api.analysis.manyboost.io
+        if (parts.length >= 2) {
+          API_URL = `${protocol}//api.${window.location.hostname}`
+        } else {
+          API_URL = `${protocol}//${window.location.hostname}:8000`
+        }
+      }
       
       console.log('Hostname:', window.location.hostname)
+      console.log('Protocol:', window.location.protocol)
       console.log('API URL:', API_URL)
       console.log('Testing API key...')
       

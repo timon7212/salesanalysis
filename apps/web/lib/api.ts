@@ -2,11 +2,26 @@ const getAPIBaseURL = () => {
   if (typeof window === 'undefined') {
     return 'http://localhost:8000' // SSR fallback
   }
+  
   const isLocal = window.location.hostname === 'localhost' || 
-                 window.location.hostname === '127.0.0.1'
-  return isLocal 
-    ? 'http://localhost:8000' 
-    : `http://${window.location.hostname}:8000`
+                 window.location.hostname === '127.0.0.1' ||
+                 window.location.hostname.match(/^\d+\.\d+\.\d+\.\d+$/) // IP address
+  
+  if (isLocal) {
+    return 'http://localhost:8000'
+  }
+  
+  // Production: используем api поддомен и тот же протокол что и страница
+  const protocol = window.location.protocol // https: или http:
+  const parts = window.location.hostname.split('.')
+  
+  // Если уже есть поддомен (например analysis.manyboost.io)
+  // делаем api.analysis.manyboost.io
+  if (parts.length >= 2) {
+    return `${protocol}//api.${window.location.hostname}`
+  }
+  
+  return `${protocol}//${window.location.hostname}:8000`
 }
 
 const API_BASE_URL = getAPIBaseURL()
