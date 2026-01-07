@@ -1,4 +1,14 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const getAPIBaseURL = () => {
+  if (typeof window === 'undefined') {
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  }
+  return process.env.NEXT_PUBLIC_API_URL || 
+    (window.location.hostname === 'localhost' 
+      ? 'http://localhost:8000' 
+      : `http://${window.location.hostname}:8000`)
+}
+
+const API_BASE_URL = getAPIBaseURL()
 
 function getAuthHeaders(): HeadersInit {
   const apiKey = typeof window !== 'undefined' ? localStorage.getItem('apiKey') : null

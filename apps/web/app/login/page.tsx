@@ -23,7 +23,12 @@ export default function LoginPage() {
 
     // Test the API key
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/health`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 
+        (typeof window !== 'undefined' && window.location.origin.includes('localhost') 
+          ? 'http://localhost:8000' 
+          : `http://${window.location.hostname}:8000`)
+      
+      const response = await fetch(`${API_URL}/health`, {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
         },
